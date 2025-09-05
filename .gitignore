@@ -1,7 +1,12 @@
+.actrc
+.env*
 # Dependencies
 node_modules/
 .pnp
 .pnp.js
+
+.yarn/cache
+.yarn/install-state.gz
 
 .claude 
 # Production builds
@@ -9,6 +14,7 @@ dist/
 build/
 lib/
 out/
+current-codeql-setup/
 
 # Runtime data
 pids

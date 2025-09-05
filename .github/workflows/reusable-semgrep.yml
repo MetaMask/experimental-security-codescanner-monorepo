@@ -24,10 +24,10 @@ jobs:
       actions: read
       contents: read
       security-events: write
-    
+
     outputs:
       sarif-id: ${{ steps.upload.outputs.sarif-id }}
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
 
       - name: Call Security Code Scanner Semgrep Action
         id: semgrep-scan
-        uses: witmicko/security-scanner-monorepo/packages/semgrep-action@main
+        uses: ./packages/semgrep-action
         with:
           paths_ignored: ${{ inputs.paths_ignored }}
 
