@@ -1,5 +1,4 @@
 name: "Security Code Scanner"
-description: "Main security scanner that orchestrates CodeQL and Semgrep analysis"
 inputs:
   repo:
     description: "Repo to be scanned"
@@ -54,7 +53,7 @@ runs:
     - name: CodeQL Scan
       id: codeql-scan
       continue-on-error: true
-      uses: witmicko/security-scanner-monorepo/packages/codeql-action@main
+      uses: MetaMask/CodeQL-action@main
       with:
         repo: ${{ inputs.repo }}
         paths_ignored: ${{ inputs.paths_ignored }}
@@ -63,7 +62,7 @@ runs:
     - name: Semgrep Scan
       id: semgrep-scan
       continue-on-error: true
-      uses: witmicko/security-scanner-monorepo/packages/semgrep-action@main
+      uses: MetaMask/Semgrep-action@main
       with:
         paths_ignored: ${{ inputs.paths_ignored }}
 
@@ -89,7 +88,7 @@ runs:
         payload: |
           {
             "text": "Scan failed for run:https://github.com/${{inputs.repo}}/actions/runs/${{ github.run_id }}",
-            "channel": "#security-notifications"
+            "channel": "#mm-appsec-tooling-notifications"
           }
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook }}
