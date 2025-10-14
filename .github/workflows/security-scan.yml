@@ -53,63 +53,7 @@ on:
         required: false
         type: string
         default: ''
-      ref:
-        description: 'Branch/ref of security-codescanner-monorepo to use (for testing). Must be explicitly passed when testing from a dev branch.'
-        required: false
-        type: string
-        default: 'main'
-  workflow_dispatch:
-    inputs:
-      repo:
-        description: 'Repository that requested the scan'
-        required: true
-        type: string
-        default: 'metamask/security-codescanner-monorepo'
-      languages_config:
-        description: |
-          Optional: JSON array of language configurations to override/supplement repo config file.
-          Auto-detects languages and loads repo-specific config from packages/codeql-action/repo-configs/${repo}.cjs.
-          Workflow input takes precedence over file config for same languages.
-          Example:
-          [
-            {
-              "language": "java",
-              "build_mode": "manual",
-              "build_command": "./gradlew build",
-              "version": "21",
-              "distribution": "temurin"
-            },
-            {
-              "language": "javascript",
-              "build_mode": "none"
-            }
-          ]
-        required: false
-        type: string
-        default: ''
-      paths_ignored:
-        description: 'Comma delimited paths to ignore during scan'
-        required: false
-        type: string
-        default: 'node_modules,dist'
-      rules_excluded:
-        description: 'Comma delimited IDs of rules to exclude'
-        required: false
-        type: string
-        default: ''
-      project_metrics_token:
-        description: 'Analytics token to log failed builds'
-        required: false
-        type: string
-      slack_webhook:
-        description: 'Slack webhook for notifications'
-        required: false
-        type: string
-      ref:
-        description: 'Branch/ref of security-codescanner-monorepo to use (for testing). Must be explicitly passed when testing from a dev branch.'
-        required: false
-        type: string
-        default: 'main'
+
 
 env:
   MONOREPO_PATH: .security-scanner
@@ -122,11 +66,19 @@ jobs:
       languages: ${{ steps.detect-languages.outputs.languages }}
       matrix: ${{ steps.detect-languages.outputs.matrix }}
     steps:
+      - name: Debug GitHub Action Ref
+        run: |
+          echo "=================== ACTION REF DEBUG ==================="
+          echo "github.action_ref: ${{ github.action_ref }}"
+          echo "github.ref_name: ${{ github.ref_name }}"
+          echo "github.sha: ${{ github.sha }}"
+          echo "========================================================"
+
       - name: Checkout monorepo (for local actions)
         uses: actions/checkout@v4
         with:
           repository: metamask/security-codescanner-monorepo
-          ref: ${{ inputs.ref || 'main' }}
+          ref: ${{ github.action_ref || 'main' }}
           path: ${{ env.MONOREPO_PATH }}
 
       - name: Checkout target repository
@@ -196,7 +148,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: metamask/security-codescanner-monorepo
-          ref: ${{ inputs.ref || 'main' }}
+          ref: ${{ github.action_ref || 'main' }}
           path: ${{ env.MONOREPO_PATH }}
 
       - name: Checkout target repository
@@ -255,7 +207,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: metamask/security-codescanner-monorepo
-          ref: ${{ inputs.ref || 'main' }}
+          ref: ${{ github.action_ref || 'main' }}
           path: ${{ env.MONOREPO_PATH }}
 
       - name: Checkout target repository
