@@ -12,6 +12,11 @@ on:
         description: 'Repository to scan (defaults to current repository)'
         required: false
         type: string
+      scanner_ref:
+        description: 'Reference to the scanner repository'
+        required: false
+        type: string
+        default: 'main'
 
 jobs:
   security-scan:

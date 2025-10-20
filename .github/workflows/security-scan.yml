@@ -11,6 +11,11 @@ on:
         description: 'Repository that requested the scan'
         required: false
         type: string
+      scanner_ref:
+        description: 'Reference to the scanner repository'
+        required: false
+        type: string
+        default: 'main'
       languages_config:
         description: |
           Optional: JSON array of language configurations to override/supplement repo config file.
@@ -66,33 +71,11 @@ jobs:
       languages: ${{ steps.detect-languages.outputs.languages }}
       matrix: ${{ steps.detect-languages.outputs.matrix }}
     steps:
-      - name: Debug GitHub Action Ref
-        run: |
-          echo "=================== ACTION REF DEBUG ==================="
-          echo "github.action_ref: ${{ github.action_ref }}"
-          echo "github.action_repository: ${{ github.action_repository }}"
-          echo "github.action_path: ${{ github.action_path }}"
-          echo "github.workflow_ref: ${{ github.workflow_ref }}"
-          echo "github.workflow_sha: ${{ github.workflow_sha }}"
-          echo "github.ref: ${{ github.ref }}"
-          echo "github.ref_name: ${{ github.ref_name }}"
-          echo "github.sha: ${{ github.sha }}"
-          echo ""
-          echo "Environment variables:"
-          echo "GITHUB_REF: $GITHUB_REF"
-          echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
-          echo "GITHUB_BASE_REF: $GITHUB_BASE_REF"
-          echo ""
-          echo "All GITHUB_* env vars:"
-          env | grep GITHUB_ | sort
-          echo "========================================================"
-
       - name: Checkout monorepo (for local actions)
         uses: actions/checkout@v4
         with:
           repository: metamask/security-codescanner-monorepo
-          ref: ${{ github.action_ref || 'main' }}
+          ref: ${{ inputs.scanner_ref || 'main' }}
           path: ${{ env.MONOREPO_PATH }}
 
       - name: Checkout target repository
