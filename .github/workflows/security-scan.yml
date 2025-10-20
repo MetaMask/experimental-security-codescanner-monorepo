@@ -74,7 +74,7 @@ jobs:
       - name: Checkout monorepo (for local actions)
         uses: actions/checkout@v4
         with:
-          repository: metamask/security-codescanner-monorepo
+          repository: metamask/experimental-security-codescanner-monorepo
           ref: ${{ inputs.scanner_ref || 'main' }}
           path: ${{ env.MONOREPO_PATH }}
 
