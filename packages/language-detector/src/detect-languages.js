@@ -20,6 +20,20 @@ async function main() {
   const githubLanguages = await fetchGitHubLanguages(repo, token);
   const detectedLanguages = detectLanguages(githubLanguages);
 
+  // Debug output (goes to stderr, won't interfere with JSON output)
+  console.error('\n=================== LANGUAGE DETECTION DEBUG ===================');
+  console.error(`Repository: ${repo}`);
+  console.error('\nDetected Languages:');
+  console.error(JSON.stringify(detectedLanguages, null, 2));
+  console.error('\nMatrix parsed:');
+  try {
+    const parsed = JSON.parse(JSON.stringify(detectedLanguages));
+    console.error(JSON.stringify(parsed, null, 2));
+  } catch (error) {
+    console.error('Failed to parse matrix JSON:', error.message);
+  }
+  console.error('=================================================================\n');
+
   // Output JSON to stdout for consumption by GitHub Actions
   console.log(JSON.stringify(detectedLanguages));
 }

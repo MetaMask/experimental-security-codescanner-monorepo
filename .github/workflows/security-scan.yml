@@ -68,7 +68,6 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      languages: ${{ steps.detect-languages.outputs.languages }}
       matrix: ${{ steps.detect-languages.outputs.matrix }}
     steps:
       - name: Checkout monorepo (for local actions)
@@ -90,43 +89,6 @@ jobs:
         with:
           repo: ${{ inputs.repo }}
           languages_config: ${{ inputs.languages_config }}
-
-  # Debug logging job to show detected languages and API response
-  debug-languages:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Show Language Detection Results
-        env:
-          REPO: ${{ inputs.repo }}
-          DETECTED_LANGUAGES: ${{ needs.setup.outputs.languages }}
-          DETECTED_MATRIX: ${{ needs.setup.outputs.matrix }}
-        run: |
-          echo "=================== LANGUAGE DETECTION DEBUG ==================="
-          echo "Repository: $REPO"
-          echo
-          echo "Exact GitHub API command used:"
-          echo "gh api -H \"Accept: application/vnd.github+json\" -H \"X-GitHub-Api-Version: 2022-11-28\" \"/repos/$REPO/languages\""
-          echo
-          echo "Raw GitHub API Response:"
-          api_response=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "/repos/$REPO/languages" 2>/dev/null || echo "{}")
-          echo "$api_response"
-          echo
-          echo "Pretty-printed GitHub languages with byte counts:"
-          echo "$api_response" | jq -r 'to_entries[] | "\(.key): \(.value) bytes"' 2>/dev/null || echo "Failed to parse JSON"
-          echo
-          echo "Detected Languages (output from language-detector):"
-          echo "$DETECTED_LANGUAGES"
-          echo
-          echo "Generated Matrix (output from language-detector):"
-          echo "$DETECTED_MATRIX"
-          echo
-          echo "Matrix parsed:"
-          echo "$DETECTED_MATRIX" | jq '.' 2>/dev/null || echo "Failed to parse matrix JSON"
-          echo "================================================================="
 
   # Run CodeQL analysis for each detected language
   codeql-analysis:
@@ -153,31 +115,6 @@ jobs:
         with:
           repository: ${{ inputs.repo }}
           path: ${{ inputs.repo }}
-
-      - name: Debug Directory Structure for CodeQL
-        run: |
-          echo "=================== CODEQL DIRECTORY DEBUG ==================="
-          echo "Current working directory:"
-          pwd
-          echo
-          echo "Directory tree (top 3 levels):"
-          find . -maxdepth 3 -type d | head -20 | sort
-          echo
-          echo "Looking for query suite files:"
-          find . -name "*.qls" -type f 2>/dev/null || echo "No .qls files found"
-          echo
-          echo "Contents of ${{ env.MONOREPO_PATH }}/packages/codeql-action/query-suites/:"
-          ls -la ${{ env.MONOREPO_PATH }}/packages/codeql-action/query-suites/ 2>/dev/null || echo "Directory not found"
-          echo
-          echo "Contents of custom-queries/query-suites/:"
-          ls -la custom-queries/query-suites/ 2>/dev/null || echo "Directory not found"
-          echo
-          echo "Target repository path:"
-          ls -la ${{ inputs.repo }}/ 2>/dev/null || echo "Target repo directory not found"
-          echo
-          echo "Repository input: ${{ inputs.repo }}"
-          echo "Language: ${{ matrix.language }}"
-          echo "================================================================="
 
       - name: Run CodeQL Analysis
         uses: ./.security-scanner/packages/codeql-action
