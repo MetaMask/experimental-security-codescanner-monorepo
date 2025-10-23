@@ -1,0 +1,45 @@
+name: Publish Release
+
+on:
+  workflow_call:
+    inputs:
+      slack-icon-url:
+        required: false
+        type: string
+        default: 'https://raw.githubusercontent.com/MetaMask/action-npm-publish/main/robo.png'
+      slack-subteam:
+        required: false
+        type: string
+        default: S042S7RE4AE # @metamask-npm-publishers
+      slack-username:
+        required: false
+        type: string
+        default: 'MetaMask bot'
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
+
+jobs:
+  publish-release:
+    name: Publish release
+    environment: action-publish
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # This is to guarantee that the most recent tag is fetched, which we
+          # need for updating the shorthand major version tag.
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - name: Publish release
+        uses: MetaMask/action-publish-release@v3
+        id: publish-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update shorthand major version tag
+        run: |
+          ./.github/workflows/scripts/update-major-version-tag.sh \
+            ${{ steps.publish-release.outputs.release-version }}
