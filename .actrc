@@ -1,4 +1,0 @@
-# Act configuration for local testing
--P ubuntu-latest=catthehacker/ubuntu:act-latest
---container-architecture linux/amd64
---env-file .env.act

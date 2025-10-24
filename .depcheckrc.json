@@ -1,8 +1,0 @@
-{
-  "ignores": [
-    "@lavamoat/allow-scripts",
-    "@lavamoat/preinstall-always-fail",
-    "@metamask/auto-changelog",
-    "prettier-plugin-*"
-  ]
-}
