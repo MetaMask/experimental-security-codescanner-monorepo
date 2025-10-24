@@ -40,8 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release of this action ([#29](https://github.com/MetaMask/action-security-code-scanner/pull/29))
 
-[Unreleased]: https://github.com/MetaMask/experimental-security-codescanner-monorepo/compare/v1.1.3...HEAD
-[1.1.3]: https://github.com/MetaMask/experimental-security-codescanner-monorepo/compare/v1.1.1...v1.1.3
-[1.1.1]: https://github.com/MetaMask/experimental-security-codescanner-monorepo/compare/v1.1.0...v1.1.1
-[1.1.0]: https://github.com/MetaMask/experimental-security-codescanner-monorepo/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/MetaMask/experimental-security-codescanner-monorepo/releases/tag/v1.0.0
+[Unreleased]: https://github.com/MetaMask/action-security-code-scanner/compare/v1.1.3...HEAD
+[1.1.3]: https://github.com/MetaMask/action-security-code-scanner/compare/v1.1.1...v1.1.3
+[1.1.1]: https://github.com/MetaMask/action-security-code-scanner/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/MetaMask/action-security-code-scanner/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/MetaMask/action-security-code-scanner/releases/tag/v1.0.0
