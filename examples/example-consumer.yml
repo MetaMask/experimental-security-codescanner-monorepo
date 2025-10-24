@@ -1,0 +1,61 @@
+# Example: How to use the security scanner from a consumer repository
+
+name: 'Example Consumer Usage'
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: 'Repository to scan (defaults to current repository)'
+        required: false
+        type: string
+      scanner_ref:
+        description: 'Reference to the scanner repository'
+        required: false
+        type: string
+        default: 'main'
+
+jobs:
+  security-scan:
+    uses: metamask/security-codescanner-monorepo/.github/workflows/security-scan.yml@main
+    with:
+      repo: ${{ inputs.target_repo || github.repository }}
+      # Uncomment to test from a dev branch:
+      # ref: monorepoed
+      # languages_config: '' # Leave empty for auto-detection with repo defaults
+      # Example with custom Java build:
+      # languages_config: |
+      #   [
+      #     {
+      #       "language": "java",
+      #       "build_mode": "manual",
+      #       "build_command": "./gradlew :coordinator:app:build",
+      #       "version": "21"
+      #     }
+      #   ]
+      paths_ignored: |
+        .storybook/
+        **/__snapshots__/
+        **/*.snap
+        **/*.stories.js
+        **/*.test.js*
+        **/*.test.ts*
+        **/fixtures/
+        **/mocks/
+        **/test*/
+        docs/
+        node_modules
+        dist
+        build
+      rules_excluded: |
+        rule1
+        rule2
+      # project_metrics_token: ${{ secrets.SECURITY_SCAN_METRICS_TOKEN }}
+      # slack_webhook: ${{ secrets.APPSEC_BOT_SLACK_WEBHOOK }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write

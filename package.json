@@ -1,0 +1,46 @@
+{
+  "name": "@metamask/security-codescanner-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Security Code Scanner - Monorepo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metamask/security-codescanner-monorepo.git"
+  },
+  "license": "ISC",
+  "author": "metamask",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "yarn workspaces foreach -A run build",
+    "check": "node shared/scripts/check-packages.js",
+    "clean": "yarn workspaces foreach -A run clean && node shared/scripts/clean-all.js",
+    "install:all": "yarn install --immutable",
+    "lint": "yarn lint:misc --check && yarn lint:dependencies --check",
+    "lint:dependencies": "depcheck && yarn dedupe",
+    "lint:fix": "yarn lint:misc --write && yarn lint:dependencies",
+    "lint:misc": "prettier '**/*.json' '**/*.md' '**/*.yml' '**/*.js' '**/*.ts' '!.yarnrc.yml' '!**/codeql-template.yml' '!**/rule.template.*' --ignore-path .gitignore --no-error-on-unmatched-pattern",
+    "test": "yarn workspaces foreach -A run test",
+    "validate": "node shared/scripts/validate-actions.js"
+  },
+  "devDependencies": {
+    "@lavamoat/allow-scripts": "^3.3.1",
+    "@lavamoat/preinstall-always-fail": "^2.1.0",
+    "@metamask/auto-changelog": "^4.1.0",
+    "depcheck": "^1.4.7",
+    "prettier": "^3.5.3",
+    "prettier-plugin-packagejson": "^2.5.10",
+    "prettier-plugin-sh": "^0.15.0",
+    "yaml": "^2.6.1"
+  },
+  "packageManager": "yarn@4.7.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@lavamoat/preinstall-always-fail": false
+    }
+  }
+}
